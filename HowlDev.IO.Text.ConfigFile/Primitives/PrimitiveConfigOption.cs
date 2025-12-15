@@ -10,7 +10,7 @@ public class PrimitiveConfigOption : IBaseConfigOption {
     private string value;
 
     /// <summary/>
-    public BaseType type => BaseType.Primitive;
+    public ConfigOptionType type => ConfigOptionType.Primitive;
 
     /// <summary/>
     public IEnumerable<string> Keys => throw new InvalidOperationException("Key enumeration not allowed on type of PrimitiveConfigOption.");
@@ -97,7 +97,7 @@ public class PrimitiveConfigOption : IBaseConfigOption {
     public char ToChar(IFormatProvider? provider) => throw new InvalidOperationException("ToChar not supported on type PrimitiveConfigOption");
 
     /// <inheritdoc/>
-    public DateTime ToDateTime(IFormatProvider? provider) => throw new InvalidOperationException("ToDateTime not supported on type PrimitiveConfigOption");
+    public DateTime ToDateTime(IFormatProvider? provider) => DateTime.Parse(value);
 
     /// <inheritdoc/>
     public decimal ToDecimal(IFormatProvider? provider) => (decimal)AsDouble();
@@ -112,7 +112,7 @@ public class PrimitiveConfigOption : IBaseConfigOption {
     public int ToInt32(IFormatProvider? provider) => AsInt();
 
     /// <inheritdoc/>
-    public long ToInt64(IFormatProvider? provider) => throw new InvalidOperationException("ToInt64 not supported on type PrimitiveConfigOption");
+    public long ToInt64(IFormatProvider? provider) => AsInt();
 
     /// <inheritdoc/>
     public sbyte ToSByte(IFormatProvider? provider) => throw new InvalidOperationException("ToSByte not supported on type PrimitiveConfigOption");

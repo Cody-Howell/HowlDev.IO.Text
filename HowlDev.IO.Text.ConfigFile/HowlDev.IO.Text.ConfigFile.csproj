@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Version>2.0-beta</Version>
 		<Authors>Howl Dev</Authors>
-		<Description>A class that takes in text and allows a freeform way to read it.</Description>
+		<Description>A class that takes in text and allows a freeform way to read it. Objects are weakly typed, with indexers and strong typing exports for simple objects.</Description>
 		<PackageTags>config,string,text</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Cody-Howell/HowlDev.IO.Text</RepositoryUrl>

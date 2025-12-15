@@ -276,13 +276,16 @@ Contains helpers and enums as well as the 3 text parsers used for the ConfigFile
 
 The tokens come back in a particular way. There is a Frame object in the ConfigFile library that takes them in a particular order and outputs the results objects, arrays, and primitives. 
 
-That order has a general format with a few rules: 
+That order has a general format with a few rules. I hope to have a better guide for tokenization in the future, but here are some: 
 - Objects must specify a key before applying a value
 - Primitives, close object tokens, and close array tokens can all be children to an object or array
+
+1.0 (12/15/25)
+
+- Not sure why I had it in beta. 
+- Updated target to Net8.0.
 
 1.0-beta (12/12/25)
 
 - Created project
-
-This will be removed from beta probably in a few months. 
 

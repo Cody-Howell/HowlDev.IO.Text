@@ -11,7 +11,7 @@ public class ObjectConfigOption : IBaseConfigOption {
     private string resourcePath;
 
     /// <summary/>
-    public BaseType type => BaseType.Object;
+    public ConfigOptionType type => ConfigOptionType.Object;
     /// <summary/>
     public int Count => obj.Count;
     /// <summary/>

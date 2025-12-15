@@ -11,7 +11,7 @@ public class ArrayConfigOption : IBaseConfigOption {
     private string resourcePath;
 
     /// <summary/>
-    public BaseType type => BaseType.Array;
+    public ConfigOptionType type => ConfigOptionType.Array;
     /// <summary/>
     public int Count => array.Count;
     /// <summary/>

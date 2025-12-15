@@ -6,5 +6,5 @@ namespace HowlDev.IO.Text.ConfigFile.Interfaces;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public interface IBaseConfigOption : IBasePrimitiveOption, IBaseArrayOption, IBaseObjectOption, IConvertible {
     /// <summary/>
-    BaseType type { get; }
+    ConfigOptionType type { get; }
 }

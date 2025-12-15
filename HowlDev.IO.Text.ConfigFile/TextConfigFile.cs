@@ -14,7 +14,7 @@ public class TextConfigFile : IBaseConfigOption {
 
     #region Option Exports
     /// <summary/>
-    public BaseType type => option.type;
+    public ConfigOptionType type => option.type;
     /// <summary/>
     public int Count => option.Count;
     /// <summary/>
@@ -231,7 +231,7 @@ public class TextConfigFile : IBaseConfigOption {
                 throw new StrictMappingException(
                     $"""
                     No suitable constructor found for {typeof(T).Name}. Consider removing the StrictMatching flag. 
-                    Tried to find a constructor that matched the following keys: {String.Join(", ", option.Keys.ToArray())}.
+                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
                     """
                 );
             }
@@ -240,7 +240,7 @@ public class TextConfigFile : IBaseConfigOption {
                 throw new InvalidOperationException(
                     $"""
                     No suitable constructor found for {typeof(T).Name}. 
-                    Tried to find a constructor that matched the following keys: {String.Join(", ", option.Keys.ToArray())}.
+                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
                     """
                 );
             }
@@ -288,7 +288,15 @@ public class TextConfigFile : IBaseConfigOption {
         );
     }
 
-    private static IBaseConfigOption ParseFileAsOption(TokenParser func) {
+    /// <summary>
+    /// This is the internal tool that creates the configuration, but I've decided to expose it if 
+    /// you create your own parser functions. Generally, you don't need to worry about 
+    /// this at all, but if you do, you can make your own parsers (which just provides an enumerable of tokens). 
+    /// You can use this to check that your parser is working properly if it were a file reader. 
+    /// </summary>
+    /// <param name="func">Object that implements IEnumerable&lt;(TextToken, string)&gt;.</param>
+    /// <returns><see cref="IBaseConfigOption"/></returns>
+    public static IBaseConfigOption ParseFileAsOption(TokenParser func) {
         var stack = new Stack<Frame>();
         stack.Push(new Frame(FrameKind.Root));
 

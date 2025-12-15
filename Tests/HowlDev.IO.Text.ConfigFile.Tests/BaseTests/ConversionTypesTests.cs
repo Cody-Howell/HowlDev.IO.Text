@@ -1,6 +1,4 @@
-﻿using HowlDev.IO.Text.ConfigFile.Enums;
-using HowlDev.IO.Text.ConfigFile.Primitives;
-using HowlDev.IO.Text.ConfigFile.Interfaces;
+﻿using HowlDev.IO.Text.ConfigFile.Primitives;
 
 namespace HowlDev.IO.Text.ConfigFile.Tests.BaseTests;
 
@@ -16,12 +14,17 @@ internal class ConversionTypesTests {
         await Assert.That(stringPrimitive.ToString(null)).IsEqualTo("Hello World");
         await Assert.That(stringPrimitive.AsString()).IsEqualTo("Hello World");
         await Assert.That(stringPrimitive.GetTypeCode()).IsEqualTo(TypeCode.String);
+
+        // Datetime conversion
+        var datetimePrimitive = new PrimitiveConfigOption("2025-12-15T06:00:23Z");
+        await Assert.That(datetimePrimitive.ToDateTime(null).Second).IsEqualTo(23);
         
         // Integer conversions
         var intPrimitive = new PrimitiveConfigOption("42");
         await Assert.That(intPrimitive.ToInt32(null)).IsEqualTo(42);
         await Assert.That(intPrimitive.AsInt()).IsEqualTo(42);
         await Assert.That(intPrimitive.ToInt16(null)).IsEqualTo((short)42);
+        await Assert.That(intPrimitive.ToInt64(null)).IsEqualTo(42);
         await Assert.That(intPrimitive.ToUInt16(null)).IsEqualTo((ushort)42);
         await Assert.That(intPrimitive.ToUInt32(null)).IsEqualTo((uint)42);
         await Assert.That(intPrimitive.ToUInt64(null)).IsEqualTo((ulong)42);
@@ -53,14 +56,6 @@ internal class ConversionTypesTests {
         await Assert.That(() => primitive.ToChar(null))
             .Throws<InvalidOperationException>()
             .WithMessage("ToChar not supported on type PrimitiveConfigOption");
-        
-        await Assert.That(() => primitive.ToDateTime(null))
-            .Throws<InvalidOperationException>()
-            .WithMessage("ToDateTime not supported on type PrimitiveConfigOption");
-        
-        await Assert.That(() => primitive.ToInt64(null))
-            .Throws<InvalidOperationException>()
-            .WithMessage("ToInt64 not supported on type PrimitiveConfigOption");
         
         await Assert.That(() => primitive.ToSByte(null))
             .Throws<InvalidOperationException>()

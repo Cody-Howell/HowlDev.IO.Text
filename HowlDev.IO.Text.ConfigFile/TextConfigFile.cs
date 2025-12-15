@@ -99,14 +99,14 @@ public class TextConfigFile : IBaseConfigOption {
         string file = File.ReadAllText(filePath);
         switch (extension) {
             case ".txt":
-                option = ParseFileAsOption(new TXTParser(file));
+                option = ConvertTokenStreamToConfigOption(new TXTParser(file));
                 return;
             case ".yaml":
             case ".yml":
-                option = ParseFileAsOption(new YAMLParser(file));
+                option = ConvertTokenStreamToConfigOption(new YAMLParser(file));
                 break;
             case ".json":
-                option = ParseFileAsOption(new JSONParser(file));
+                option = ConvertTokenStreamToConfigOption(new JSONParser(file));
                 break;
             default: throw new Exception("Extension error should be handled above. Extension was not recognized.");
         }
@@ -122,9 +122,9 @@ public class TextConfigFile : IBaseConfigOption {
     public static TextConfigFile ReadTextAs(FileTypes type, string fileValue) {
         TextConfigFile file = new TextConfigFile();
         switch (type) {
-            case FileTypes.TXT: file.option = ParseFileAsOption(new TXTParser(fileValue)); break;
-            case FileTypes.YAML: file.option = ParseFileAsOption(new YAMLParser(fileValue)); break;
-            case FileTypes.JSON: file.option = ParseFileAsOption(new JSONParser(fileValue)); break;
+            case FileTypes.TXT: file.option = ConvertTokenStreamToConfigOption(new TXTParser(fileValue)); break;
+            case FileTypes.YAML: file.option = ConvertTokenStreamToConfigOption(new YAMLParser(fileValue)); break;
+            case FileTypes.JSON: file.option = ConvertTokenStreamToConfigOption(new JSONParser(fileValue)); break;
         }
         return file;
     }
@@ -296,7 +296,7 @@ public class TextConfigFile : IBaseConfigOption {
     /// </summary>
     /// <param name="func">Object that implements <c>TokenParser</c> (IEnumerable&lt;(TextToken, string)&gt;).</param>
     /// <returns><see cref="IBaseConfigOption"/></returns>
-    public static IBaseConfigOption ParseFileAsOption(TokenParser func) {
+    public static IBaseConfigOption ConvertTokenStreamToConfigOption(TokenParser func) {
         var stack = new Stack<Frame>();
         stack.Push(new Frame(FrameKind.Root));
 

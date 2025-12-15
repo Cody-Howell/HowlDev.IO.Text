@@ -6,9 +6,11 @@
 		<Version>1.0</Version>
 		<Authors>Howl Dev</Authors>
 		<Description>An array of text parsers for different formats that export tokens.</Description>
-		<PackageTags>config,string,text</PackageTags>
+		<Copyright>Copyright (c) Howl Dev 2025</Copyright>
+		<PackageTags>string,text</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Cody-Howell/HowlDev.IO.Text</RepositoryUrl>
+		<PackageProjectUrl>https://wiki.codyhowell.dev/io.text</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>_HowlDevLogo.png</PackageIcon>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>

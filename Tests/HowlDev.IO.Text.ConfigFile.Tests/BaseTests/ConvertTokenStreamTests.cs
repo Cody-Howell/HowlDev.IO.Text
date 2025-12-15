@@ -17,7 +17,7 @@ internal class ParseFileAsOptionTests {
             (TextToken.StartObject, ""), 
             (TextToken.EndObject, "")
         ]);
-        await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
+        await Assert.That(() => TextConfigFile.ConvertTokenStreamToConfigOption(p))
             .Throws<InvalidOperationException>()
             .WithMessage("Not all objects were closed. Stack count post-parse: 1");
     }
@@ -29,7 +29,7 @@ internal class ParseFileAsOptionTests {
             (TextToken.Primitive, "Lorem"),
             (TextToken.EndObject, "")
         ]);
-        await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
+        await Assert.That(() => TextConfigFile.ConvertTokenStreamToConfigOption(p))
             .Throws<InvalidOperationException>()
             .WithMessage("Cannot close an Array object with an EndObject token.");
     }
@@ -43,7 +43,7 @@ internal class ParseFileAsOptionTests {
             (TextToken.Primitive, "Lorem2"),
             (TextToken.EndArray, ""), 
         ]);
-        await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
+        await Assert.That(() => TextConfigFile.ConvertTokenStreamToConfigOption(p))
             .Throws<InvalidOperationException>()
             .WithMessage("Cannot close an Object object with an EndArray token.");
     }

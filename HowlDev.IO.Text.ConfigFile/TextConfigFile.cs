@@ -308,6 +308,9 @@ public class TextConfigFile : IBaseConfigOption {
                     break;
                 case TextToken.EndObject:
                     var obj = stack.Pop();
+                    if (obj.Kind != FrameKind.Object) {
+                        throw new InvalidOperationException("Cannot close an Array object with an EndObject token.");
+                    }
                     var parent = stack.Peek();
                     parent.Add(obj.AsOption());
                     break;
@@ -316,6 +319,9 @@ public class TextConfigFile : IBaseConfigOption {
                     break;
                 case TextToken.EndArray:
                     var arr = stack.Pop();
+                    if (arr.Kind != FrameKind.Array) {
+                        throw new InvalidOperationException("Cannot close an Object object with an EndArray token.");
+                    }
                     parent = stack.Peek();
                     parent.Add(arr.AsOption());
                     break;
@@ -331,6 +337,9 @@ public class TextConfigFile : IBaseConfigOption {
         }
 
         Frame root = stack.Pop();
+        if (stack.Count > 0) {
+            throw new InvalidOperationException($"Not all objects were closed. Stack count post-parse: {stack.Count}");
+        }
         return root.AsOption();
     }
 }

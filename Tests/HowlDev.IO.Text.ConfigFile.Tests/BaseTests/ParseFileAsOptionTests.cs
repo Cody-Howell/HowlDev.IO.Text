@@ -9,15 +9,43 @@ namespace HowlDev.IO.Text.ConfigFile.Tests.BaseTests;
 
 internal class ParseFileAsOptionTests {
     [Test]
-    public async Task AllObjectsMustBeClosedBeforeEnding1() {
+    public async Task AllObjectsMustBeClosedBeforeEnding() {
+        // { Lorem: {} 
         var p = new PseudoTextParser([
             (TextToken.StartObject, ""), 
             (TextToken.KeyValue, "Lorem"),
-            (TextToken.StartObject, "Lorem")
+            (TextToken.StartObject, ""), 
+            (TextToken.EndObject, "")
         ]);
         await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
             .Throws<InvalidOperationException>()
-            .WithMessage("");
+            .WithMessage("Not all objects were closed. Stack count post-parse: 1");
+    }
+
+    [Test]
+    public async Task CannotCloseAnArrayWithObject() {
+        var p = new PseudoTextParser([
+            (TextToken.StartArray, ""), 
+            (TextToken.Primitive, "Lorem"),
+            (TextToken.EndObject, "")
+        ]);
+        await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
+            .Throws<InvalidOperationException>()
+            .WithMessage("Cannot close an Array object with an EndObject token.");
+    }
+
+    [Test]
+    public async Task CannotCloseAnObjectWithArray() {
+        // { Lorem: {} 
+        var p = new PseudoTextParser([
+            (TextToken.StartObject, ""), 
+            (TextToken.KeyValue, "Lorem"),
+            (TextToken.Primitive, "Lorem2"),
+            (TextToken.EndArray, ""), 
+        ]);
+        await Assert.That(() => TextConfigFile.ParseFileAsOption(p))
+            .Throws<InvalidOperationException>()
+            .WithMessage("Cannot close an Object object with an EndArray token.");
     }
 }
 

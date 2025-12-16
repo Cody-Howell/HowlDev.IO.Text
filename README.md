@@ -1,3 +1,7 @@
+ConfigFile: ![NuGet Version](https://img.shields.io/nuget/v/HowlDev.IO.Text.ConfigFile)
+
+Parsers: ![NuGet Version](https://img.shields.io/nuget/v/HowlDev.IO.Text.Parsers)
+
 # HowlDev.IO.Text.ConfigFile
 
 This is a hand-written text parser for TXT, YAML, and JSON files. It's designed for use in constructors

@@ -2,8 +2,8 @@ name: Publish NuGet Packages
 
 on:
   push:
-      paths:
-        - '**/*.csproj'
+      # paths:
+      #   - '**/*.csproj'
 
 jobs:
   publish:
@@ -51,7 +51,7 @@ jobs:
 
             echo "$output"
 
-            if echo "$output" | grep -q "Skipping duplicate"; then
+            if echo "$output" | grep -q "already exists"; then
               echo "Package already exists. Skipping symbols."
               continue
             fi

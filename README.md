@@ -241,6 +241,12 @@ public async Task PersonRecordTest() {
 
 ## Changelog
 
+2.0.1 (12/17/25)
+
+- (Partially so I can get rid of the Symbols error thrown from my last one...)
+- Updated OptionMappingOptions to a class and added dual constructors. 
+  - AsStrict now takes in an Options... and adds the strict method to it, which makes strict options more explicit
+
 2.0 (12/15/25)
 
 I couldn't wait. 

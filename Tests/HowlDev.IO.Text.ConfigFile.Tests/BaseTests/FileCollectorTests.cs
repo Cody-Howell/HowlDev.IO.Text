@@ -21,11 +21,11 @@ public class TXTFileCollectorTests {
         ConfigFileCollector c = new ConfigFileCollector(["../../../data/TXT/Realistic/File1.txt"]);
 
         TextConfigFile reader = c.GetFile("File1.txt");
-        await Assert.That(reader["Enemy Name"].AsString()).IsEqualTo("Bad Guy");
-        await Assert.That(reader["Enemy Color"].AsString()).IsEqualTo("#9645ff");
-        await Assert.That(reader["Is Boss"].AsBool()).IsEqualTo(true);
-        await Assert.That(reader["Enemy Speed"].AsInt()).IsEqualTo(15);
-        await Assert.That(reader["Enemy Damage"].AsDouble()).IsEqualTo(23.4);
+        await Assert.That(reader["Enemy Name"].ToString(null)).IsEqualTo("Bad Guy");
+        await Assert.That(reader["Enemy Color"].ToString(null)).IsEqualTo("#9645ff");
+        await Assert.That(reader["Is Boss"].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(reader["Enemy Speed"].ToInt32(null)).IsEqualTo(15);
+        await Assert.That(reader["Enemy Damage"].ToDouble(null)).IsEqualTo(23.4);
     }
 
     [Test]
@@ -35,18 +35,18 @@ public class TXTFileCollectorTests {
             );
 
         TextConfigFile reader1 = c.GetFile("File1.txt");
-        await Assert.That(reader1["Enemy Name"].AsString()).IsEqualTo("Bad Guy");
-        await Assert.That(reader1["Enemy Color"].AsString()).IsEqualTo("#9645ff");
-        await Assert.That(reader1["Is Boss"].AsBool()).IsEqualTo(true);
-        await Assert.That(reader1["Enemy Speed"].AsInt()).IsEqualTo(15);
-        await Assert.That(reader1["Enemy Damage"].AsDouble()).IsEqualTo(23.4);
+        await Assert.That(reader1["Enemy Name"].ToString(null)).IsEqualTo("Bad Guy");
+        await Assert.That(reader1["Enemy Color"].ToString(null)).IsEqualTo("#9645ff");
+        await Assert.That(reader1["Is Boss"].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(reader1["Enemy Speed"].ToInt32(null)).IsEqualTo(15);
+        await Assert.That(reader1["Enemy Damage"].ToDouble(null)).IsEqualTo(23.4);
 
         TextConfigFile reader2 = c.GetFile("Ints.txt");
-        await Assert.That(reader2["Some Ints"][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader2["Some Ints"][1].AsInt()).IsEqualTo(2);
-        await Assert.That(reader2["Some Ints"][2].AsInt()).IsEqualTo(3);
-        await Assert.That(reader2["Some Ints"][3].AsInt()).IsEqualTo(4);
-        await Assert.That(reader2["Some Ints"][4].AsInt()).IsEqualTo(5);
+        await Assert.That(reader2["Some Ints"][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader2["Some Ints"][1].ToInt32(null)).IsEqualTo(2);
+        await Assert.That(reader2["Some Ints"][2].ToInt32(null)).IsEqualTo(3);
+        await Assert.That(reader2["Some Ints"][3].ToInt32(null)).IsEqualTo(4);
+        await Assert.That(reader2["Some Ints"][4].ToInt32(null)).IsEqualTo(5);
     }
 
     [Test]
@@ -70,13 +70,13 @@ public class YAMLFileCollectorTests {
         ConfigFileCollector c = new ConfigFileCollector(["../../../data/YAML/Realistic/ComplexObject.yaml"]);
 
         TextConfigFile reader = c.GetFile("ComplexObject.yaml");
-        await Assert.That(reader["first"]["simple Array"][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader["first"]["brother"].AsString()).IsEqualTo("sample String");
-        await Assert.That(reader["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
+        await Assert.That(reader["first"]["simple Array"][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader["first"]["brother"].ToString(null)).IsEqualTo("sample String");
+        await Assert.That(reader["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
 
-        await Assert.That(reader["second"]["arrayOfObjects"][0]["lorem"].AsString()).IsEqualTo("ipsum");
-        await Assert.That(reader["second"]["arrayOfObjects"][1]["something2"].AsBool()).IsEqualTo(false);
-        await Assert.That(reader["second"]["otherThing"].AsString()).IsEqualTo("hopefully");
+        await Assert.That(reader["second"]["arrayOfObjects"][0]["lorem"].ToString(null)).IsEqualTo("ipsum");
+        await Assert.That(reader["second"]["arrayOfObjects"][1]["something2"].ToBoolean(null)).IsEqualTo(false);
+        await Assert.That(reader["second"]["otherThing"].ToString(null)).IsEqualTo("hopefully");
     }
 
     [Test]
@@ -86,20 +86,20 @@ public class YAMLFileCollectorTests {
             );
 
         TextConfigFile reader1 = c.GetFile("ComplexObject.yaml");
-        await Assert.That(reader1["first"]["simple Array"][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader1["first"]["brother"].AsString()).IsEqualTo("sample String");
-        await Assert.That(reader1["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
+        await Assert.That(reader1["first"]["simple Array"][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader1["first"]["brother"].ToString(null)).IsEqualTo("sample String");
+        await Assert.That(reader1["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
 
-        await Assert.That(reader1["second"]["arrayOfObjects"][0]["lorem"].AsString()).IsEqualTo("ipsum");
-        await Assert.That(reader1["second"]["arrayOfObjects"][1]["something2"].AsBool()).IsEqualTo(false);
-        await Assert.That(reader1["second"]["otherThing"].AsString()).IsEqualTo("hopefully");
+        await Assert.That(reader1["second"]["arrayOfObjects"][0]["lorem"].ToString(null)).IsEqualTo("ipsum");
+        await Assert.That(reader1["second"]["arrayOfObjects"][1]["something2"].ToBoolean(null)).IsEqualTo(false);
+        await Assert.That(reader1["second"]["otherThing"].ToString(null)).IsEqualTo("hopefully");
 
         TextConfigFile reader2 = c.GetFile("MixedArray.yml");
-        await Assert.That(reader2[0]["object"].AsString()).IsEqualTo("this is");
-        await Assert.That(reader2[0]["part2"].AsString()).IsEqualTo("still part of this object");
-        await Assert.That(reader2[0]["part3"].AsDouble()).IsEqualTo(45.3);
-        await Assert.That(reader2[1].AsInt()).IsEqualTo(15);
-        await Assert.That(reader2[2].AsString()).IsEqualTo("test string");
+        await Assert.That(reader2[0]["object"].ToString(null)).IsEqualTo("this is");
+        await Assert.That(reader2[0]["part2"].ToString(null)).IsEqualTo("still part of this object");
+        await Assert.That(reader2[0]["part3"].ToDouble(null)).IsEqualTo(45.3);
+        await Assert.That(reader2[1].ToInt32(null)).IsEqualTo(15);
+        await Assert.That(reader2[2].ToString(null)).IsEqualTo("test string");
     }
 
     [Test]
@@ -123,13 +123,13 @@ public class JSONFileCollectorTests {
         ConfigFileCollector c = new ConfigFileCollector(["../../../data/JSON/Realistic/ComplexObject.json"]);
 
         TextConfigFile reader = c.GetFile("ComplexObject.json");
-        await Assert.That(reader["first"]["simple Array"][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader["first"]["brother"].AsString()).IsEqualTo("sample String");
-        await Assert.That(reader["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
+        await Assert.That(reader["first"]["simple Array"][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader["first"]["brother"].ToString(null)).IsEqualTo("sample String");
+        await Assert.That(reader["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
 
-        await Assert.That(reader["second"]["arrayOfObjects"][0]["lorem"].AsString()).IsEqualTo("ipsum");
-        await Assert.That(reader["second"]["arrayOfObjects"][1]["something2"].AsBool()).IsEqualTo(false);
-        await Assert.That(reader["second"]["otherThing"].AsString()).IsEqualTo("hopefully");
+        await Assert.That(reader["second"]["arrayOfObjects"][0]["lorem"].ToString(null)).IsEqualTo("ipsum");
+        await Assert.That(reader["second"]["arrayOfObjects"][1]["something2"].ToBoolean(null)).IsEqualTo(false);
+        await Assert.That(reader["second"]["otherThing"].ToString(null)).IsEqualTo("hopefully");
     }
 
     [Test]
@@ -139,22 +139,22 @@ public class JSONFileCollectorTests {
             );
 
         TextConfigFile reader1 = c.GetFile("ComplexObject.json");
-        await Assert.That(reader1["first"]["simple Array"][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader1["first"]["brother"].AsString()).IsEqualTo("sample String");
-        await Assert.That(reader1["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
+        await Assert.That(reader1["first"]["simple Array"][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader1["first"]["brother"].ToString(null)).IsEqualTo("sample String");
+        await Assert.That(reader1["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
 
-        await Assert.That(reader1["second"]["arrayOfObjects"][0]["lorem"].AsString()).IsEqualTo("ipsum");
-        await Assert.That(reader1["second"]["arrayOfObjects"][1]["something2"].AsBool()).IsEqualTo(false);
-        await Assert.That(reader1["second"]["otherThing"].AsString()).IsEqualTo("hopefully");
+        await Assert.That(reader1["second"]["arrayOfObjects"][0]["lorem"].ToString(null)).IsEqualTo("ipsum");
+        await Assert.That(reader1["second"]["arrayOfObjects"][1]["something2"].ToBoolean(null)).IsEqualTo(false);
+        await Assert.That(reader1["second"]["otherThing"].ToString(null)).IsEqualTo("hopefully");
 
         TextConfigFile reader2 = c.GetFile("ArrayWithArray.json");
-        await Assert.That(reader2[0][0].AsInt()).IsEqualTo(1);
-        await Assert.That(reader2[0][1].AsBool()).IsEqualTo(true);
-        await Assert.That(reader2[0][2].AsString()).IsEqualTo("string");
+        await Assert.That(reader2[0][0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(reader2[0][1].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(reader2[0][2].ToString(null)).IsEqualTo("string");
 
-        await Assert.That(reader2[1][0].AsString()).IsEqualTo("second array");
-        await Assert.That(reader2[1][1].AsDouble()).IsEqualTo(5.3);
-        await Assert.That(reader2[1][2].AsBool()).IsEqualTo(false);
+        await Assert.That(reader2[1][0].ToString(null)).IsEqualTo("second array");
+        await Assert.That(reader2[1][1].ToDouble(null)).IsEqualTo(5.3);
+        await Assert.That(reader2[1][2].ToBoolean(null)).IsEqualTo(false);
     }
 
     [Test]
@@ -185,8 +185,8 @@ public class MixedFileCollectorTests {
         TextConfigFile y = c.GetFile("ComplexObject.yaml");
         TextConfigFile j = c.GetFile("ComplexObject.json");
 
-        await Assert.That(t["Is Boss"].AsBool()).IsEqualTo(true);
-        await Assert.That(y["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
-        await Assert.That(j["first"]["other sibling"]["sibKey"].AsString()).IsEqualTo("sibValue");
+        await Assert.That(t["Is Boss"].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(y["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
+        await Assert.That(j["first"]["other sibling"]["sibKey"].ToString(null)).IsEqualTo("sibValue");
     }
 }

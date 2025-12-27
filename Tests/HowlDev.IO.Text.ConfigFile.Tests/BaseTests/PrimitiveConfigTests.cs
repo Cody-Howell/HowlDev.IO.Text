@@ -8,7 +8,7 @@ public class PrimitiveConfigTests {
     [Arguments("               Lorem Ipsum with more spaces    ", "Lorem Ipsum with more spaces")]
     public async Task ReturnsString(string s, string exp) {
         PrimitiveConfigOption p = new PrimitiveConfigOption(s);
-        await Assert.That(p.AsString()).IsEqualTo(exp);
+        await Assert.That(p.ToString(null)).IsEqualTo(exp);
     }
 
     [Test]
@@ -17,13 +17,13 @@ public class PrimitiveConfigTests {
     [Arguments("-234", -234)]
     public async Task AsValidInt(string s, int exp) {
         PrimitiveConfigOption p = new PrimitiveConfigOption(s);
-        await Assert.That(p.AsInt()).IsEqualTo(exp);
+        await Assert.That(p.ToInt32(null)).IsEqualTo(exp);
     }
 
     [Test]
     public async Task AsInvalidInts() {
         PrimitiveConfigOption p = new PrimitiveConfigOption("Lorem");
-        await Assert.That(p.AsInt)
+        await Assert.That(() => p.ToInt32(null))
             .Throws<InvalidCastException>()
             .WithMessage($"Value \"Lorem\" is not castable to an Int.");
     }
@@ -34,13 +34,13 @@ public class PrimitiveConfigTests {
     [Arguments("-234.345", -234.345)]
     public async Task AsValidDouble(string s, double exp) {
         PrimitiveConfigOption p = new PrimitiveConfigOption(s);
-        await Assert.That(p.AsDouble()).IsEqualTo(exp);
+        await Assert.That(p.ToDouble(null)).IsEqualTo(exp);
     }
 
     [Test]
     public async Task AsInvalidDoubles() {
         PrimitiveConfigOption p = new PrimitiveConfigOption("34.45.56");
-        await Assert.That(p.AsDouble)
+        await Assert.That(() => p.ToDouble(null))
             .Throws<InvalidCastException>()
             .WithMessage($"Value \"34.45.56\" is not castable to a Double.");
     }
@@ -52,13 +52,13 @@ public class PrimitiveConfigTests {
     [Arguments("false", false)]
     public async Task AsValidBools(string s, bool exp) {
         PrimitiveConfigOption p = new PrimitiveConfigOption(s);
-        await Assert.That(p.AsBool()).IsEqualTo(exp);
+        await Assert.That(p.ToBoolean(null)).IsEqualTo(exp);
     }
 
     [Test]
     public async Task AsInvalidBool() {
         PrimitiveConfigOption p = new PrimitiveConfigOption("tru");
-        await Assert.That(p.AsBool)
+        await Assert.That(() => p.ToBoolean(null))
             .Throws<InvalidCastException>()
             .WithMessage($"Value \"tru\" is not castable to a Boolean.");
     }

@@ -16,12 +16,12 @@ public class MixedObjectTests {
             { "second", new PrimitiveConfigOption("true") }
         }, "test");
 
-        await Assert.That(obj["first"][0]["first"].AsInt()).IsEqualTo(10);
-        await Assert.That(obj["first"][1].AsDouble()).IsEqualTo(20.2);
-        await Assert.That(obj["first"][2].AsString()).IsEqualTo("Lorem");
-        await Assert.That(obj["second"].AsBool()).IsEqualTo(true);
+        await Assert.That(obj["first"][0]["first"].ToInt32(null)).IsEqualTo(10);
+        await Assert.That(obj["first"][1].ToDouble(null)).IsEqualTo(20.2);
+        await Assert.That(obj["first"][2].ToString(null)).IsEqualTo("Lorem");
+        await Assert.That(obj["second"].ToBoolean(null)).IsEqualTo(true);
 
-        await Assert.That(() => obj["first"][1].AsInt())
+        await Assert.That(() => obj["first"][1].ToInt32(null))
             .Throws<InvalidCastException>()
             .WithMessage("Value \"20.2\" is not castable to an Int.");
     }

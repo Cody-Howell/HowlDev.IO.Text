@@ -12,7 +12,7 @@ internal class ConversionTypesTests {
         // String conversion
         var stringPrimitive = new PrimitiveConfigOption("Hello World");
         await Assert.That(stringPrimitive.ToString(null)).IsEqualTo("Hello World");
-        await Assert.That(stringPrimitive.AsString()).IsEqualTo("Hello World");
+        await Assert.That(stringPrimitive.ToString(null)).IsEqualTo("Hello World");
         await Assert.That(stringPrimitive.GetTypeCode()).IsEqualTo(TypeCode.String);
 
         // Datetime conversion
@@ -22,7 +22,6 @@ internal class ConversionTypesTests {
         // Integer conversions
         var intPrimitive = new PrimitiveConfigOption("42");
         await Assert.That(intPrimitive.ToInt32(null)).IsEqualTo(42);
-        await Assert.That(intPrimitive.AsInt()).IsEqualTo(42);
         await Assert.That(intPrimitive.ToInt16(null)).IsEqualTo((short)42);
         await Assert.That(intPrimitive.ToInt64(null)).IsEqualTo(42);
         await Assert.That(intPrimitive.ToUInt16(null)).IsEqualTo((ushort)42);
@@ -32,13 +31,13 @@ internal class ConversionTypesTests {
         // Double/Decimal conversions
         var doublePrimitive = new PrimitiveConfigOption("3.14159");
         await Assert.That(doublePrimitive.ToDouble(null)).IsEqualTo(3.14159);
-        await Assert.That(doublePrimitive.AsDouble()).IsEqualTo(3.14159);
+        await Assert.That(doublePrimitive.ToDouble(null)).IsEqualTo(3.14159);
         await Assert.That(doublePrimitive.ToDecimal(null)).IsEqualTo((decimal)3.14159);
 
         // Boolean conversions
         var boolPrimitive = new PrimitiveConfigOption("true");
         await Assert.That(boolPrimitive.ToBoolean(null)).IsEqualTo(true);
-        await Assert.That(boolPrimitive.AsBool()).IsEqualTo(true);
+        await Assert.That(boolPrimitive.ToBoolean(null)).IsEqualTo(true);
 
         var falseBoolPrimitive = new PrimitiveConfigOption("false");
         await Assert.That(falseBoolPrimitive.ToBoolean(null)).IsEqualTo(false);

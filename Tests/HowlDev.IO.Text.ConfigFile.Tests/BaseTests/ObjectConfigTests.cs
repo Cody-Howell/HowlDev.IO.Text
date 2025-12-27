@@ -8,7 +8,7 @@ public class FirstOrderObjectConfigTests {
         var config = new ObjectConfigOption(new Dictionary<string, IBaseConfigOption> {
             { "key", new PrimitiveConfigOption("value") }
         });
-        await Assert.That(config["key"].AsString()).IsEqualTo("value");
+        await Assert.That(config["key"].ToString(null)).IsEqualTo("value");
     }
 
     [Test]
@@ -17,8 +17,8 @@ public class FirstOrderObjectConfigTests {
             { "key1", new PrimitiveConfigOption("value1") },
             { "key2", new PrimitiveConfigOption("value2") }
         });
-        await Assert.That(config["key1"].AsString()).IsEqualTo("value1");
-        await Assert.That(config["key2"].AsString()).IsEqualTo("value2");
+        await Assert.That(config["key1"].ToString(null)).IsEqualTo("value1");
+        await Assert.That(config["key2"].ToString(null)).IsEqualTo("value2");
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class SecondOrderObjectConfigTests {
                 { "second", new PrimitiveConfigOption("10")}
             })}
         });
-        await Assert.That(c["first"]["second"].AsInt()).IsEqualTo(10);
+        await Assert.That(c["first"]["second"].ToInt32(null)).IsEqualTo(10);
     }
 
     [Test]
@@ -71,8 +71,8 @@ public class SecondOrderObjectConfigTests {
             })},
             {"prim", new PrimitiveConfigOption("true") }
         });
-        await Assert.That(c["first"]["second"].AsInt()).IsEqualTo(10);
-        await Assert.That(c["prim"].AsBool()).IsEqualTo(true);
+        await Assert.That(c["first"]["second"].ToInt32(null)).IsEqualTo(10);
+        await Assert.That(c["prim"].ToBoolean(null)).IsEqualTo(true);
     }
 
     [Test]
@@ -98,7 +98,7 @@ public class ThirdOrderObjectConfigTests {
                 })}
             })},
         });
-        await Assert.That(c["first"]["second"]["third"].AsInt()).IsEqualTo(10);
+        await Assert.That(c["first"]["second"]["third"].ToInt32(null)).IsEqualTo(10);
     }
 
     [Test]

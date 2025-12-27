@@ -11,7 +11,7 @@ public class ObjectConfigOption : IBaseConfigOption {
     private string resourcePath;
 
     /// <summary/>
-    public ConfigOptionType type => ConfigOptionType.Object;
+    public ConfigOptionType Type => ConfigOptionType.Object;
     /// <summary/>
     public int Count => obj.Count;
     /// <summary/>
@@ -39,14 +39,6 @@ public class ObjectConfigOption : IBaseConfigOption {
     }
     /// <summary/>
     public IBaseConfigOption this[int index] => throw new InvalidOperationException("Operation invalid on type of ObjectConfigOption.");
-    /// <summary/>
-    public string AsString() => throw new InvalidOperationException("Type casting not allowed on type ObjectConfigOption");
-    /// <summary/>
-    public int AsInt() => throw new InvalidOperationException("Type casting not allowed on type ObjectConfigOption");
-    /// <summary/>
-    public double AsDouble() => throw new InvalidOperationException("Type casting not allowed on type ObjectConfigOption");
-    /// <summary/>
-    public bool AsBool() => throw new InvalidOperationException("Type casting not allowed on type ObjectConfigOption");
     /// <summary/>
     public List<string> AsStringList() => throw new InvalidOperationException("List returning not allowed on type ObjectConfigOption");
     /// <summary/>
@@ -116,4 +108,132 @@ public class ObjectConfigOption : IBaseConfigOption {
 
     /// <inheritdoc/>
     public ulong ToUInt64(IFormatProvider? provider) => throw new InvalidOperationException("ToUInt64 not allowed on type of ObjectConfigOption.");
+
+/// <inheritdoc/>
+    public T As<T>() {
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true });
+    }
+
+    /// <inheritdoc/>
+    public T As<T>(OptionMappingOptions option) {
+        return Map<T>(option);
+    }
+
+    /// <inheritdoc/>
+    public T AsStrict<T>() {
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true, StrictMatching = true });
+    }
+
+    /// <inheritdoc/>
+    public T AsStrict<T>(OptionMappingOptions option) {
+        return Map<T>(new OptionMappingOptions(option) { StrictMatching = true });
+    }
+
+    /// <inheritdoc/>
+    public T AsConstructed<T>() {
+        return Map<T>(new OptionMappingOptions() { UseConstructors = true });
+    }
+
+    /// <inheritdoc/>
+    public T AsStrictConstructed<T>() {
+        return Map<T>(new OptionMappingOptions() { UseConstructors = true, StrictMatching = true });
+    }
+
+    /// <inheritdoc/>
+    public T AsProperties<T>() {
+        return Map<T>(new OptionMappingOptions() { UseProperties = true });
+    }
+
+    /// <inheritdoc/>
+    public T AsStrictProperties<T>() {
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, StrictMatching = true });
+    }
+
+    private T Map<T>(OptionMappingOptions options, IBaseConfigOption? option = null) {
+        option ??= this; 
+
+        if (options.UseConstructors) {
+            var ctors = typeof(T).GetConstructors();
+
+            if (options.UseProperties) {
+                ctors = [.. ctors.Where(p => p.GetParameters().Length > 0)];
+            }
+
+            if (options.StrictMatching) {
+                ctors = [.. ctors.Where(p => p.GetParameters().Length == option.Count)];
+            }
+
+            foreach (var ctor in ctors.OrderByDescending(c => c.GetParameters().Length)) {
+                var parameters = ctor.GetParameters();
+                bool canCreate = parameters.All(p => Contains(p.Name!));
+
+                if (canCreate) {
+                    var args = parameters
+                        .Select(p => Convert.ChangeType(option[p.Name!], p.ParameterType))
+                        .ToArray();
+
+                    return (T)ctor.Invoke(args);
+                }
+            }
+
+            if (options.StrictMatching && !options.UseProperties) {
+                throw new StrictMappingException(
+                    $"""
+                    No suitable constructor found for {typeof(T).Name}. Consider removing the StrictMatching flag. 
+                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
+                    """
+                );
+            }
+
+            if (!options.UseProperties) {
+                throw new InvalidOperationException(
+                    $"""
+                    No suitable constructor found for {typeof(T).Name}. 
+                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
+                    """
+                );
+            }
+        }
+
+        if (options.UseProperties) {
+            if (typeof(T).GetConstructor(System.Type.EmptyTypes) == null) {
+                throw new InvalidOperationException(
+                    $"Type {typeof(T).Name} must have a parameterless constructor to use property mapping."
+                );
+            }
+
+            T instance = Activator.CreateInstance<T>()!;
+            var properties = typeof(T).GetProperties().Where(p => p.CanWrite);
+
+            if (options.StrictMatching) {
+                if (properties.Count() != option.Count) {
+                    throw new StrictMappingException(
+                        $"""
+                        Property count mismatch for {typeof(T).Name}. Consider removing the StrictMatching flag. 
+                        Property count of type: {properties.Count()}. Key count of object: {option.Count}.
+                        """
+                    );
+                }
+            }
+
+            foreach (var prop in properties) {
+                if (option.TryGet(prop.Name, out var value)) {
+                    prop.SetValue(instance, Convert.ChangeType(value, prop.PropertyType));
+                } else if (options.StrictMatching) {
+                    throw new StrictMappingException(
+                        $"""
+                        Property mismatch for {typeof(T).Name}. Consider removing the StrictMatching flag. 
+                        Could not find matching object key for property: {prop.Name}.
+                        """
+                    );
+                }
+            }
+
+            return instance;
+        }
+
+        throw new InvalidOperationException(
+            $"Was not able to construct object for {typeof(T).Name}."
+        );
+    }
 }

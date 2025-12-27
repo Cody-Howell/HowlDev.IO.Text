@@ -14,7 +14,7 @@ public class TextConfigFile : IBaseConfigOption {
 
     #region Option Exports
     /// <summary/>
-    public ConfigOptionType type => option.type;
+    public ConfigOptionType Type => option.Type;
     /// <summary/>
     public int Count => option.Count;
     /// <summary/>
@@ -27,19 +27,11 @@ public class TextConfigFile : IBaseConfigOption {
     /// <summary/>
     public IBaseConfigOption this[int index] => option[index];
     /// <summary/>
-    public bool AsBool() => option.AsBool();
-    /// <summary/>
     public List<bool> AsBoolList() => option.AsBoolList();
-    /// <summary/>
-    public double AsDouble() => option.AsDouble();
     /// <summary/>
     public List<double> AsDoubleList() => option.AsDoubleList();
     /// <summary/>
-    public int AsInt() => option.AsInt();
-    /// <summary/>
     public List<int> AsIntList() => option.AsIntList();
-    /// <summary/>
-    public string AsString() => option.AsString();
     /// <summary/>
     public List<string> AsStringList() => option.AsStringList();
 
@@ -81,6 +73,22 @@ public class TextConfigFile : IBaseConfigOption {
     public uint ToUInt32(IFormatProvider? provider) => option.ToUInt32(provider);
     /// <inheritdoc/>
     public ulong ToUInt64(IFormatProvider? provider) => option.ToUInt64(provider);
+    /// <inheritdoc/>
+    public T As<T>() => option.As<T>();
+    /// <inheritdoc/>
+    public T As<T>(OptionMappingOptions options) => option.As<T>(options);
+    /// <inheritdoc/>
+    public T AsStrict<T>() => option.AsStrict<T>();
+    /// <inheritdoc/>
+    public T AsStrict<T>(OptionMappingOptions options) => option.AsStrict<T>(options);
+    /// <inheritdoc/>
+    public T AsConstructed<T>() => option.AsConstructed<T>();
+    /// <inheritdoc/>
+    public T AsStrictConstructed<T>() => option.AsStrictConstructed<T>();
+    /// <inheritdoc/>
+    public T AsProperties<T>() => option.AsProperties<T>();
+    /// <inheritdoc/>
+    public T AsStrictProperties<T>() => option.AsStrictProperties<T>();
     #endregion
 
     private List<string> acceptedExtensions = [".txt", ".yml", ".yaml", ".json"];
@@ -108,7 +116,7 @@ public class TextConfigFile : IBaseConfigOption {
             case ".json":
                 option = ConvertTokenStreamToConfigOption(new JSONParser(file));
                 break;
-            default: throw new Exception("Extension error should be handled above. Extension was not recognized.");
+            default: throw new Exception("Extension error. Should be added to the acceptedExtensions inner array. Extension was not recognized.");
         }
     }
 
@@ -127,177 +135,6 @@ public class TextConfigFile : IBaseConfigOption {
             case FileTypes.JSON: file.option = ConvertTokenStreamToConfigOption(new JSONParser(fileValue)); break;
         }
         return file;
-    }
-
-    /// <summary>
-    /// Defaults to attempt a constructor call first, and if that fails, uses a parameterless constructor and 
-    /// fills in any available properties. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    public T As<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true });
-    }
-
-    /// <summary>
-    /// Takes in an <see cref="OptionMappingOptions"/> type through to the inner Map function. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="StrictMappingException"/>
-    public T As<T>(OptionMappingOptions option) {
-        return Map<T>(option);
-    }
-
-    /// <summary>
-    /// Defaults to attempt a constructor call first, and if that fails, uses a parameterless constructor and 
-    /// fills in any available properties. <br/>
-    /// Will strictly test for the number of values in the object and the constructor and/or number of writable 
-    /// properties in the passed in type. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="StrictMappingException"/>
-    public T AsStrict<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true, StrictMatching = true });
-    }
-
-    /// <summary>
-    /// Defaults to attempt a constructor call first, and if that fails, uses a parameterless constructor and 
-    /// fills in any available properties. <br/>
-    /// Will strictly test for the number of values in the object and the constructor and/or number of writable 
-    /// properties in the passed in type. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="StrictMappingException"/>
-    public T AsStrict<T>(OptionMappingOptions option) {
-        return Map<T>(new OptionMappingOptions(option) { StrictMatching = true });
-    }
-
-    /// <summary>
-    /// Uses constructors to build an object. It sorts by descending length of parameters 
-    /// and uses the first that the object satisfies all values.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    public T AsConstructed<T>() {
-        return Map<T>(new OptionMappingOptions() { UseConstructors = true });
-    }
-
-    /// <summary>
-    /// Uses constructors to build an object. 
-    /// It uses Strict matching, so it only checks constructors that have the same length 
-    /// as the object this contains.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="StrictMappingException"/>
-    public T AsStrictConstructed<T>() {
-        return Map<T>(new OptionMappingOptions() { UseConstructors = true, StrictMatching = true });
-    }
-
-    /// <summary>
-    /// Uses parameters to build an object. It requires a parameterless constructor to be available 
-    /// on the type. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    public T AsProperties<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true });
-    }
-
-    /// <summary>
-    /// Uses parameters to build an object. It requires a parameterless constructor to be available 
-    /// on the type. <br/>
-    /// For Strict mapping, it will either throw an exception if the writable keys and the object count 
-    /// have a different number, or will throw any property name that does not have an object equivalent. <br/><br/>
-    /// </summary>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="StrictMappingException"/>
-    public T AsStrictProperties<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, StrictMatching = true });
-    }
-
-    private T Map<T>(OptionMappingOptions options, IBaseConfigOption? option = null) {
-        option ??= this.option; // nice
-
-        if (options.UseConstructors) {
-            var ctors = typeof(T).GetConstructors();
-
-            if (options.UseProperties) {
-                ctors = [.. ctors.Where(p => p.GetParameters().Length > 0)];
-            }
-
-            if (options.StrictMatching) {
-                ctors = [.. ctors.Where(p => p.GetParameters().Length == option.Count)];
-            }
-
-            foreach (var ctor in ctors.OrderByDescending(c => c.GetParameters().Length)) {
-                var parameters = ctor.GetParameters();
-                bool canCreate = parameters.All(p => Contains(p.Name!));
-
-                if (canCreate) {
-                    var args = parameters
-                        .Select(p => Convert.ChangeType(option[p.Name!], p.ParameterType))
-                        .ToArray();
-
-                    return (T)ctor.Invoke(args);
-                }
-            }
-
-            if (options.StrictMatching && !options.UseProperties) {
-                throw new StrictMappingException(
-                    $"""
-                    No suitable constructor found for {typeof(T).Name}. Consider removing the StrictMatching flag. 
-                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
-                    """
-                );
-            }
-
-            if (!options.UseProperties) {
-                throw new InvalidOperationException(
-                    $"""
-                    No suitable constructor found for {typeof(T).Name}. 
-                    Tried to find a constructor that matched the following keys: {string.Join(", ", option.Keys.ToArray())}.
-                    """
-                );
-            }
-        }
-
-        if (options.UseProperties) {
-            if (typeof(T).GetConstructor(Type.EmptyTypes) == null) {
-                throw new InvalidOperationException(
-                    $"Type {typeof(T).Name} must have a parameterless constructor to use property mapping."
-                );
-            }
-
-            T instance = Activator.CreateInstance<T>()!;
-            var properties = typeof(T).GetProperties().Where(p => p.CanWrite);
-
-            if (options.StrictMatching) {
-                if (properties.Count() != option.Count) {
-                    throw new StrictMappingException(
-                        $"""
-                        Property count mismatch for {typeof(T).Name}. Consider removing the StrictMatching flag. 
-                        Property count of type: {properties.Count()}. Key count of object: {option.Count}.
-                        """
-                    );
-                }
-            }
-
-            foreach (var prop in properties) {
-                if (option.TryGet(prop.Name, out var value)) {
-                    prop.SetValue(instance, Convert.ChangeType(value, prop.PropertyType));
-                } else if (options.StrictMatching) {
-                    throw new StrictMappingException(
-                        $"""
-                        Property mismatch for {typeof(T).Name}. Consider removing the StrictMatching flag. 
-                        Could not find matching object key for property: {prop.Name}.
-                        """
-                    );
-                }
-            }
-
-            return instance;
-        }
-
-        throw new InvalidOperationException(
-            $"Was not able to construct object for {typeof(T).Name}."
-        );
     }
 
     /// <summary>

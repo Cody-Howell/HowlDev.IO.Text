@@ -7,11 +7,11 @@ namespace HowlDev.IO.Text.ConfigFile.Primitives;
 /// <summary/>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public class ArrayConfigOption : IBaseConfigOption {
-    private List<IBaseConfigOption> array = new List<IBaseConfigOption>();
+    private List<IBaseConfigOption> array = [];
     private string resourcePath;
 
     /// <summary/>
-    public ConfigOptionType type => ConfigOptionType.Array;
+    public ConfigOptionType Type => ConfigOptionType.Array;
     /// <summary/>
     public int Count => array.Count;
     /// <summary/>
@@ -41,18 +41,10 @@ public class ArrayConfigOption : IBaseConfigOption {
         }
     }
     /// <summary/>
-    public string AsString() => throw new InvalidOperationException("Type casting not allowed on type ArrayConfigOption");
-    /// <summary/>
-    public int AsInt() => throw new InvalidOperationException("Type casting not allowed on type ArrayConfigOption");
-    /// <summary/>
-    public double AsDouble() => throw new InvalidOperationException("Type casting not allowed on type ArrayConfigOption");
-    /// <summary/>
-    public bool AsBool() => throw new InvalidOperationException("Type casting not allowed on type ArrayConfigOption");
-    /// <summary/>
     public List<string> AsStringList() {
         List<string> outList = new List<string>();
         foreach (IBaseConfigOption option in array) {
-            outList.Add(option.AsString());
+            outList.Add(option.ToString(null));
         }
         return outList;
     }
@@ -60,7 +52,7 @@ public class ArrayConfigOption : IBaseConfigOption {
     public List<int> AsIntList() {
         List<int> outList = new List<int>();
         foreach (IBaseConfigOption option in array) {
-            outList.Add(option.AsInt());
+            outList.Add(option.ToInt32(null));
         }
         return outList;
     }
@@ -68,7 +60,7 @@ public class ArrayConfigOption : IBaseConfigOption {
     public List<double> AsDoubleList() {
         List<double> outList = new List<double>();
         foreach (IBaseConfigOption option in array) {
-            outList.Add(option.AsDouble());
+            outList.Add(option.ToDouble(null));
         }
         return outList;
     }
@@ -76,7 +68,7 @@ public class ArrayConfigOption : IBaseConfigOption {
     public List<bool> AsBoolList() {
         List<bool> outList = new List<bool>();
         foreach (IBaseConfigOption option in array) {
-            outList.Add(option.AsBool());
+            outList.Add(option.ToBoolean(null));
         }
         return outList;
     }
@@ -137,4 +129,28 @@ public class ArrayConfigOption : IBaseConfigOption {
 
     /// <inheritdoc/>
     public ulong ToUInt64(IFormatProvider? provider) => throw new InvalidOperationException("ToUInt64 not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T As<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T As<T>(OptionMappingOptions option) => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsStrict<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsStrict<T>(OptionMappingOptions option) => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsConstructed<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsStrictConstructed<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsProperties<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
+
+    /// <inheritdoc/>
+    public T AsStrictProperties<T>() => throw new InvalidOperationException("Reflection not allowed on type of ArrayConfigOption.");
 }

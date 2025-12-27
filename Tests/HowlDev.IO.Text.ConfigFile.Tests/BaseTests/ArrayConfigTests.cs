@@ -9,9 +9,9 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("lorem"),
             new PrimitiveConfigOption("huh"),
             ]);
-        await Assert.That(array[0].AsString()).IsEqualTo("True");
-        await Assert.That(array[1].AsString()).IsEqualTo("lorem");
-        await Assert.That(array[2].AsString()).IsEqualTo("huh");
+        await Assert.That(array[0].ToString(null)).IsEqualTo("True");
+        await Assert.That(array[1].ToString(null)).IsEqualTo("lorem");
+        await Assert.That(array[2].ToString(null)).IsEqualTo("huh");
     }
 
     [Test]
@@ -36,10 +36,10 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("4"),
             new PrimitiveConfigOption("-5"),
             ]);
-        await Assert.That(array[0].AsInt()).IsEqualTo(1);
-        await Assert.That(array[1].AsInt()).IsEqualTo(3);
-        await Assert.That(array[2].AsInt()).IsEqualTo(4);
-        await Assert.That(array[3].AsInt()).IsEqualTo(-5);
+        await Assert.That(array[0].ToInt32(null)).IsEqualTo(1);
+        await Assert.That(array[1].ToInt32(null)).IsEqualTo(3);
+        await Assert.That(array[2].ToInt32(null)).IsEqualTo(4);
+        await Assert.That(array[3].ToInt32(null)).IsEqualTo(-5);
     }
 
     [Test]
@@ -66,10 +66,10 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("4.1"),
             new PrimitiveConfigOption("-5.463"),
             ]);
-        await Assert.That(array[0].AsDouble()).IsEqualTo(1.234);
-        await Assert.That(array[1].AsDouble()).IsEqualTo(3.74);
-        await Assert.That(array[2].AsDouble()).IsEqualTo(4.1);
-        await Assert.That(array[3].AsDouble()).IsEqualTo(-5.463);
+        await Assert.That(array[0].ToDouble(null)).IsEqualTo(1.234);
+        await Assert.That(array[1].ToDouble(null)).IsEqualTo(3.74);
+        await Assert.That(array[2].ToDouble(null)).IsEqualTo(4.1);
+        await Assert.That(array[3].ToDouble(null)).IsEqualTo(-5.463);
     }
 
     [Test]
@@ -96,10 +96,10 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("False"),
             new PrimitiveConfigOption("false"),
             ]);
-        await Assert.That(array[0].AsBool()).IsEqualTo(true);
-        await Assert.That(array[1].AsBool()).IsEqualTo(true);
-        await Assert.That(array[2].AsBool()).IsEqualTo(false);
-        await Assert.That(array[3].AsBool()).IsEqualTo(false);
+        await Assert.That(array[0].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(array[1].ToBoolean(null)).IsEqualTo(true);
+        await Assert.That(array[2].ToBoolean(null)).IsEqualTo(false);
+        await Assert.That(array[3].ToBoolean(null)).IsEqualTo(false);
     }
 
     [Test]
@@ -123,19 +123,18 @@ public class FirstOrderArrayConfigTests {
         ArrayConfigOption array = new ArrayConfigOption([
             new PrimitiveConfigOption("Lorem"),
             ]);
-        string exceptionValue = "Type casting not allowed on type ArrayConfigOption";
-        await Assert.That(array.AsString)
+        await Assert.That(() => array.ToString(null))
             .Throws<InvalidOperationException>()
-            .WithMessage(exceptionValue);
-        await Assert.That(array.AsInt)
+            .WithMessage("ToString not allowed on type of ArrayConfigOption.");
+        await Assert.That(() => array.ToInt32(null))
             .Throws<InvalidOperationException>()
-            .WithMessage(exceptionValue);
-        await Assert.That(array.AsDouble)
+            .WithMessage("ToInt32 not allowed on type of ArrayConfigOption.");
+        await Assert.That(() => array.ToDouble(null))
             .Throws<InvalidOperationException>()
-            .WithMessage(exceptionValue);
-        await Assert.That(array.AsBool)
+            .WithMessage("ToDouble not allowed on type of ArrayConfigOption.");
+        await Assert.That(() => array.ToBoolean(null))
             .Throws<InvalidOperationException>()
-            .WithMessage(exceptionValue);
+            .WithMessage("ToBoolean not allowed on type of ArrayConfigOption.");
     }
 
     [Test]
@@ -166,10 +165,10 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("2.34"),
             new PrimitiveConfigOption("true")
             ]);
-        await Assert.That(array[0].AsString()).IsEqualTo("Lorem");
-        await Assert.That(array[1].AsInt()).IsEqualTo(15);
-        await Assert.That(array[2].AsDouble()).IsEqualTo(2.34);
-        await Assert.That(array[3].AsBool()).IsEqualTo(true);
+        await Assert.That(array[0].ToString(null)).IsEqualTo("Lorem");
+        await Assert.That(array[1].ToInt32(null)).IsEqualTo(15);
+        await Assert.That(array[2].ToDouble(null)).IsEqualTo(2.34);
+        await Assert.That(array[3].ToBoolean(null)).IsEqualTo(true);
     }
 
     [Test]
@@ -199,10 +198,10 @@ public class SecondOrderArrayConfigTests {
                 ]),
             new PrimitiveConfigOption("false")
             ]);
-        await Assert.That(array[0].AsInt()).IsEqualTo(15);
-        await Assert.That(array[1][0].AsString()).IsEqualTo("Lorem");
-        await Assert.That(array[1][1].AsDouble()).IsEqualTo(2.34);
-        await Assert.That(array[2].AsBool).IsEqualTo(false);
+        await Assert.That(array[0].ToInt32(null)).IsEqualTo(15);
+        await Assert.That(array[1][0].ToString(null)).IsEqualTo("Lorem");
+        await Assert.That(array[1][1].ToDouble(null)).IsEqualTo(2.34);
+        await Assert.That(array[2].ToBoolean(null)).IsEqualTo(false);
     }
 
     [Test]

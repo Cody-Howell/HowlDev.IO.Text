@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace HowlDev.IO.Text.ConfigFile.Interfaces;
 /// <summary/>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IBaseConfigOption : IBasePrimitiveOption, IBaseArrayOption, IBaseObjectOption, IConvertible {
+public interface IBaseConfigOption : IBasePrimitiveOption, IBaseArrayOption, IBaseObjectOption {
     /// <summary/>
-    ConfigOptionType type { get; }
+    ConfigOptionType Type { get; }
 }

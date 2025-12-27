@@ -239,6 +239,9 @@ public async Task PersonRecordTest() {
 }
 ```
 
+Some goals for next patch: 
+- Make AsStrictEnumerable more explicit (I did try to write this and implement tests for it, but it wasn't working as expected. Currently, just pass in an options for what you need, as shown in the new test file AsEnumerable). 
+
 ## Changelog
 
 3.0 (12/26/25)
@@ -255,10 +258,23 @@ reader["person"].As<PersonRecord>();
 ```
 
 - Enables nested reflection more easily (as before it wasn't possible).
-  - I hope to quickly decide how to implement Enumerable interfaces for Arrays, and then remove the AsBooleanList, AsIntList, etc. 
 - IMPORTANT: Removed the four primmitive types AsBool, AsInt, AsDouble, AsString, in favor of the IConvertible counterparts (which are ToBoolean, ToInt32, ToDouble, and ToString(null)). You may need to provide null as the format provider when making the calls: `reader.ToInt32(null)`. 
   - This was done to simplify the interface since I was applying the IConvertible interface anyways, so I might as well get rid of extras that were simply extra calls. 
   - This also enables Convert.To___(option). 
+  - IMPORTANT: Also removed the As___List() functions. The new functionality is listed below. This was done to make it more extendable in the future. 
+- Updated Primitive options to include the As&lt;T&gt; function so that you can more quickly and explicitly say, `option.As&lt;int&gt;()` which immediately returns an int. This is a nice shorthand that resembles the four primitive methods I started with.
+
+
+```csharp
+string json = """
+[ "false", "True" ]
+""";
+TextConfigFile reader = TextConfigFile.ReadTextAs(FileTypes.JSON, json);
+
+List<bool> p = [.. reader.AsEnumerable<bool>()]; // This is collection syntax
+await Assert.That(p[0]).IsEqualTo(false);
+await Assert.That(p[1]).IsEqualTo(true);
+```
 
 2.0.1 (12/17/25)
 

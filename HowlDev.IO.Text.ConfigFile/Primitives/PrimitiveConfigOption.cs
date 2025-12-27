@@ -119,7 +119,7 @@ public class PrimitiveConfigOption : IBaseConfigOption {
     public ulong ToUInt64(IFormatProvider? provider) => (ulong)ToInt32();
 
     /// <inheritdoc/>
-    public T As<T>() => throw new InvalidOperationException("Reflection not supported on type PrimitiveConfigOption");
+    public T As<T>() => (T)Convert.ChangeType(value.ToString(null), typeof(T));
 
     /// <inheritdoc/>
     public T As<T>(OptionMappingOptions option) => throw new InvalidOperationException("Reflection not supported on type PrimitiveConfigOption");

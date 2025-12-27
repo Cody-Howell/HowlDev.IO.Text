@@ -12,12 +12,13 @@ internal class ConversionTypesTests {
         // String conversion
         var stringPrimitive = new PrimitiveConfigOption("Hello World");
         await Assert.That(stringPrimitive.ToString(null)).IsEqualTo("Hello World");
-        await Assert.That(stringPrimitive.ToString(null)).IsEqualTo("Hello World");
+        await Assert.That(stringPrimitive.As<string>()).IsEqualTo("Hello World");
         await Assert.That(stringPrimitive.GetTypeCode()).IsEqualTo(TypeCode.String);
 
         // Datetime conversion
         var datetimePrimitive = new PrimitiveConfigOption("2025-12-15T06:00:23Z");
         await Assert.That(datetimePrimitive.ToDateTime(null).Second).IsEqualTo(23);
+        await Assert.That(datetimePrimitive.As<DateTime>().Second).IsEqualTo(23);
 
         // Integer conversions
         var intPrimitive = new PrimitiveConfigOption("42");

@@ -14,7 +14,9 @@ public interface IBaseObjectOption {
     bool Contains(string key);
     /// <summary>
     /// Defaults to attempt a constructor call first, and if that fails, uses a parameterless constructor and 
-    /// fills in any available properties. 
+    /// fills in any available properties. <br/>
+    /// For Primitives, also allows you to pass in primitive types, such as <code>option.As&lt;int&gt;()</code>
+    /// to quickly return a primitive type. This is also done internally for the AsEnumerable function.
     /// </summary>
     /// <exception cref="InvalidOperationException"/>
     T As<T>();

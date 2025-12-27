@@ -51,7 +51,7 @@ public class ArrayConfigOption : IBaseConfigOption {
         foreach (IBaseConfigOption value in array) {
             switch (value.Type) {
                 case ConfigOptionType.Primitive:
-                    values.Add((T)Convert.ChangeType(value.ToString(null), typeof(T)));
+                    values.Add(value.As<T>());
                     break;
                 case ConfigOptionType.Object:
                     values.Add(ObjectConfigOption.Map<T>(options, value.Contains, value));

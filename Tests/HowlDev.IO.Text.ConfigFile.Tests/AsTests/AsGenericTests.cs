@@ -100,3 +100,21 @@ public class AsGenericStrictTests {
         await Assert.That(b.Height).IsEqualTo(12.3);
     }
 }
+public class AsGenericInnerTests {
+    [Test]
+    public async Task PersonRecordTest() {
+        string json = """
+        {
+            "person": {
+                "name": "Jane",
+                "id": 23
+            }
+        }
+        """;
+        TextConfigFile reader = TextConfigFile.ReadTextAs(FileTypes.JSON, json);
+
+        PersonRecord p = reader["person"].As<PersonRecord>();
+        await Assert.That(p.name).IsEqualTo("Jane");
+        await Assert.That(p.id).IsEqualTo(23);
+    }
+}

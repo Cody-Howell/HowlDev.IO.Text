@@ -241,6 +241,25 @@ public async Task PersonRecordTest() {
 
 ## Changelog
 
+3.0 (12/26/25)
+
+SOME BREAKING CHANGES: 
+
+- Moved reflection elements to the option interface to allow for items like below: 
+
+```csharp
+// Inital (and still an option)
+reader.As<PersonRecord>();
+// Now
+reader["person"].As<PersonRecord>();
+```
+
+- Enables nested reflection more easily (as before it wasn't possible).
+  - I hope to quickly decide how to implement Enumerable interfaces for Arrays, and then remove the AsBooleanList, AsIntList, etc. 
+- IMPORTANT: Removed the four primmitive types AsBool, AsInt, AsDouble, AsString, in favor of the IConvertible counterparts (which are ToBoolean, ToInt32, ToDouble, and ToString(null)). You may need to provide null as the format provider when making the calls: `reader.ToInt32(null)`. 
+  - This was done to simplify the interface since I was applying the IConvertible interface anyways, so I might as well get rid of extras that were simply extra calls. 
+  - This also enables Convert.To___(option). 
+
 2.0.1 (12/17/25)
 
 - (Partially so I can get rid of the Symbols error thrown from my last one...)

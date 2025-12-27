@@ -241,6 +241,7 @@ public async Task PersonRecordTest() {
 
 Some goals for next patch: 
 - Make AsStrictEnumerable more explicit (I did try to write this and implement tests for it, but it wasn't working as expected. Currently, just pass in an options for what you need, as shown in the new test file AsEnumerable). 
+- Complete YAML parser (some minor errors occur in my parsing tests)
 
 ## Changelog
 
@@ -262,7 +263,8 @@ reader["person"].As<PersonRecord>();
   - This was done to simplify the interface since I was applying the IConvertible interface anyways, so I might as well get rid of extras that were simply extra calls. 
   - This also enables Convert.To___(option). 
   - IMPORTANT: Also removed the As___List() functions. The new functionality is listed below. This was done to make it more extendable in the future. 
-- Updated Primitive options to include the As&lt;T&gt; function so that you can more quickly and explicitly say, `option.As&lt;int&gt;()` which immediately returns an int. This is a nice shorthand that resembles the four primitive methods I started with.
+- Updated Primitive options to include the As&lt;T&gt; function so that you can more quickly and explicitly say, `option.As<int>()` which immediately returns an int. This is a nice shorthand that resembles the four primitive methods I started with.
+  - I've updated the XML comment to discuss both the reflection function (for Objects) and how the Primitive side works. It's a little bit like overloading, but it seems to make the most syntactic sense right now.
 
 
 ```csharp

@@ -24,7 +24,7 @@ public class FirstOrderJSONFileTests {
     public async Task IntArrayTest() {
         TextConfigFile reader = new TextConfigFile("../../../data/JSON/FirstOrder/IntArray.json");
 
-        List<int> ints = reader.AsIntList();
+        List<int> ints = [.. reader.AsEnumerable<int>()];
 
         await Assert.That(ints.Count).IsEqualTo(4);
         await Assert.That(ints[0]).IsEqualTo(1);

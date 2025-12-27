@@ -21,7 +21,7 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("lorem"),
             new PrimitiveConfigOption("huh"),
             ]);
-        List<string> testList = array.AsStringList();
+        List<string> testList = [.. array.AsEnumerable<string>()];
         await Assert.That(testList.Count).IsEqualTo(3);
         await Assert.That(testList[0]).IsEqualTo("True");
         await Assert.That(testList[1]).IsEqualTo("lorem");
@@ -50,7 +50,7 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("4"),
             new PrimitiveConfigOption("-5"),
             ]);
-        List<int> testList = array.AsIntList();
+        List<int> testList = [.. array.AsEnumerable<int>()];
         await Assert.That(testList.Count).IsEqualTo(4);
         await Assert.That(testList[0]).IsEqualTo(1);
         await Assert.That(testList[1]).IsEqualTo(3);
@@ -80,7 +80,7 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("4.1"),
             new PrimitiveConfigOption("-5.463"),
             ]);
-        List<double> testList = array.AsDoubleList();
+        List<double> testList = [.. array.AsEnumerable<double>()];
         await Assert.That(testList.Count).IsEqualTo(4);
         await Assert.That(testList[0]).IsEqualTo(1.234);
         await Assert.That(testList[1]).IsEqualTo(3.74);
@@ -110,7 +110,7 @@ public class FirstOrderArrayConfigTests {
             new PrimitiveConfigOption("False"),
             new PrimitiveConfigOption("false"),
             ]);
-        List<bool> testList = array.AsBoolList();
+        List<bool> testList = [.. array.AsEnumerable<bool>()];
         await Assert.That(testList.Count).IsEqualTo(4);
         await Assert.That(testList[0]).IsEqualTo(true);
         await Assert.That(testList[1]).IsEqualTo(true);
@@ -170,22 +170,6 @@ public class FirstOrderArrayConfigTests {
         await Assert.That(array[2].ToDouble(null)).IsEqualTo(2.34);
         await Assert.That(array[3].ToBoolean(null)).IsEqualTo(true);
     }
-
-    [Test]
-    public async Task MixedArrayThrowsAllErrorsAsSpecificLists() {
-        ArrayConfigOption array = new ArrayConfigOption([
-            new PrimitiveConfigOption("Lorem"),
-            new PrimitiveConfigOption("15"),
-            new PrimitiveConfigOption("2.34"),
-            new PrimitiveConfigOption("true")
-            ]);
-        await Assert.That(array.AsIntList)
-            .Throws<InvalidCastException>(); // Throws the exception from the PrimitiveConfigOption, tested elsewhere.
-        await Assert.That(array.AsDoubleList)
-            .Throws<InvalidCastException>();
-        await Assert.That(array.AsBoolList)
-            .Throws<InvalidCastException>();
-    }
 }
 public class SecondOrderArrayConfigTests {
     [Test]
@@ -202,26 +186,6 @@ public class SecondOrderArrayConfigTests {
         await Assert.That(array[1][0].ToString(null)).IsEqualTo("Lorem");
         await Assert.That(array[1][1].ToDouble(null)).IsEqualTo(2.34);
         await Assert.That(array[2].ToBoolean(null)).IsEqualTo(false);
-    }
-
-    [Test]
-    public async Task NestedArraysCantBeReturnedAsLists() {
-        ArrayConfigOption array = new ArrayConfigOption([ // Order greatly matters here for what exception is thrown
-            new ArrayConfigOption([
-                new PrimitiveConfigOption("Lorem"),
-                new PrimitiveConfigOption("2.34")
-                ]),
-            new PrimitiveConfigOption("15"),
-            new PrimitiveConfigOption("false")
-            ]);
-        await Assert.That(array.AsStringList)
-            .Throws<InvalidOperationException>();
-        await Assert.That(array.AsIntList)
-            .Throws<InvalidOperationException>();
-        await Assert.That(array.AsDoubleList)
-            .Throws<InvalidOperationException>();
-        await Assert.That(array.AsBoolList)
-            .Throws<InvalidOperationException>();
     }
 
     [Test]

@@ -109,49 +109,63 @@ public class ObjectConfigOption : IBaseConfigOption {
     /// <inheritdoc/>
     public ulong ToUInt64(IFormatProvider? provider) => throw new InvalidOperationException("ToUInt64 not allowed on type of ObjectConfigOption.");
 
-/// <inheritdoc/>
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>() => throw new InvalidOperationException("AsEnumerable not allowed on type of ObjectConfigOption.");
+
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>(OptionMappingOptions options) => throw new InvalidOperationException("AsEnumerable not allowed on type of ObjectConfigOption.");
+
+    /// <inheritdoc/>
+    public IEnumerable<T> AsStrictEnumerable<T>() => throw new InvalidOperationException("AsEnumerable not allowed on type of ObjectConfigOption.");
+
+    /// <inheritdoc/>
     public T As<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true });
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T As<T>(OptionMappingOptions option) {
-        return Map<T>(option);
+        return Map<T>(option, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsStrict<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true, StrictMatching = true });
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, UseConstructors = true, StrictMatching = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsStrict<T>(OptionMappingOptions option) {
-        return Map<T>(new OptionMappingOptions(option) { StrictMatching = true });
+        return Map<T>(new OptionMappingOptions(option) { StrictMatching = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsConstructed<T>() {
-        return Map<T>(new OptionMappingOptions() { UseConstructors = true });
+        return Map<T>(new OptionMappingOptions() { UseConstructors = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsStrictConstructed<T>() {
-        return Map<T>(new OptionMappingOptions() { UseConstructors = true, StrictMatching = true });
+        return Map<T>(new OptionMappingOptions() { UseConstructors = true, StrictMatching = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsProperties<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true });
+        return Map<T>(new OptionMappingOptions() { UseProperties = true }, Contains, this);
     }
 
     /// <inheritdoc/>
     public T AsStrictProperties<T>() {
-        return Map<T>(new OptionMappingOptions() { UseProperties = true, StrictMatching = true });
+        return Map<T>(new OptionMappingOptions() { UseProperties = true, StrictMatching = true }, Contains, this);
     }
 
-    private T Map<T>(OptionMappingOptions options, IBaseConfigOption? option = null) {
-        option ??= this; 
-
+    /// <summary>
+    /// Defined in the ObjectConfigOption class for taking in an object and returning an object
+    /// of that type. Pass in a function for the ContainsKey for parameters and the config option 
+    /// to work on.
+    /// </summary>
+    /// <exception cref="StrictMappingException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
+    internal static T Map<T>(OptionMappingOptions options, Func<string, bool> func, IBaseConfigOption option) {
         if (options.UseConstructors) {
             var ctors = typeof(T).GetConstructors();
 
@@ -165,7 +179,7 @@ public class ObjectConfigOption : IBaseConfigOption {
 
             foreach (var ctor in ctors.OrderByDescending(c => c.GetParameters().Length)) {
                 var parameters = ctor.GetParameters();
-                bool canCreate = parameters.All(p => Contains(p.Name!));
+                bool canCreate = parameters.All(p => func(p.Name!));
 
                 if (canCreate) {
                     var args = parameters

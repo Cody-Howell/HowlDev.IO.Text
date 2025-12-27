@@ -26,14 +26,6 @@ public class TextConfigFile : IBaseConfigOption {
     public IBaseConfigOption this[string key] => option[key];
     /// <summary/>
     public IBaseConfigOption this[int index] => option[index];
-    /// <summary/>
-    public List<bool> AsBoolList() => option.AsBoolList();
-    /// <summary/>
-    public List<double> AsDoubleList() => option.AsDoubleList();
-    /// <summary/>
-    public List<int> AsIntList() => option.AsIntList();
-    /// <summary/>
-    public List<string> AsStringList() => option.AsStringList();
 
     /// <summary/>
     public bool TryGet(string key, out IBaseConfigOption value) => option.TryGet(key, out value);
@@ -73,6 +65,7 @@ public class TextConfigFile : IBaseConfigOption {
     public uint ToUInt32(IFormatProvider? provider) => option.ToUInt32(provider);
     /// <inheritdoc/>
     public ulong ToUInt64(IFormatProvider? provider) => option.ToUInt64(provider);
+    
     /// <inheritdoc/>
     public T As<T>() => option.As<T>();
     /// <inheritdoc/>
@@ -89,6 +82,12 @@ public class TextConfigFile : IBaseConfigOption {
     public T AsProperties<T>() => option.AsProperties<T>();
     /// <inheritdoc/>
     public T AsStrictProperties<T>() => option.AsStrictProperties<T>();
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>() => option.AsEnumerable<T>();
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>(OptionMappingOptions options) => option.AsEnumerable<T>(options);
+    /// <inheritdoc/>
+    public IEnumerable<T> AsStrictEnumerable<T>() => option.AsEnumerable<T>();
     #endregion
 
     private List<string> acceptedExtensions = [".txt", ".yml", ".yaml", ".json"];

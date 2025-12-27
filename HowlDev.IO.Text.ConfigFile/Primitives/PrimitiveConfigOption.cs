@@ -41,14 +41,10 @@ public class PrimitiveConfigOption : IBaseConfigOption {
     }
 
     /// <summary/>
-    public bool TryGet(string key, out IBaseConfigOption value) {
-        throw new InvalidOperationException("TryGet not allowed on type PrimitiveConfigOption");
-    }
+    public bool TryGet(string key, out IBaseConfigOption value) => throw new InvalidOperationException("TryGet not allowed on type PrimitiveConfigOption");
 
     /// <summary/>
-    public bool Contains(string key) {
-        throw new InvalidOperationException("Contains not allowed on type PrimitiveConfigOption");
-    }
+    public bool Contains(string key) => throw new InvalidOperationException("Contains not allowed on type PrimitiveConfigOption");
 
     /// <inheritdoc/>
     public TypeCode GetTypeCode() => TypeCode.String;
@@ -145,4 +141,13 @@ public class PrimitiveConfigOption : IBaseConfigOption {
 
     /// <inheritdoc/>
     public T AsStrictProperties<T>() => throw new InvalidOperationException("Reflection not supported on type PrimitiveConfigOption");
+
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>() => throw new InvalidOperationException("AsEnumerable not supported on type PrimitiveConfigOption");
+
+    /// <inheritdoc/>
+    public IEnumerable<T> AsEnumerable<T>(OptionMappingOptions options) => throw new InvalidOperationException("AsEnumerable not supported on type PrimitiveConfigOption");
+
+    /// <inheritdoc/>
+    public IEnumerable<T> AsStrictEnumerable<T>() => throw new InvalidOperationException("AsEnumerable not supported on type PrimitiveConfigOption");
 }

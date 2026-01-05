@@ -245,6 +245,10 @@ Some goals for next patch:
 
 ## Changelog
 
+3.1.0 (1/5/26)
+
+- Added enumerator to `ConfigFileCollector` so it's much easier to enumerate through a file set. 
+
 3.0.1 (1/5/26)
 
 - Had some problems getting the parser type, testing a simple republish. 

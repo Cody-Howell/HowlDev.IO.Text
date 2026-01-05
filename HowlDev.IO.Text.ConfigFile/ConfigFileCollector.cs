@@ -1,11 +1,13 @@
-﻿namespace HowlDev.IO.Text.ConfigFile;
+﻿using System.Collections;
+
+namespace HowlDev.IO.Text.ConfigFile;
 
 /// <summary>
 /// This class takes in an array of file paths and allows you to retrieve various different
 /// <c>ConfigFile</c> outputs. You can mix and match any of TXT, YAML, or JSON files.
 /// </summary>
-public class ConfigFileCollector {
-    private Dictionary<string, TextConfigFile> files = new();
+public class ConfigFileCollector : IEnumerable<string> {
+    private Dictionary<string, TextConfigFile> files = [];
 
     /// <summary>
     /// Given a list of file paths, checks and validates extensions and non-duplication 
@@ -33,8 +35,22 @@ public class ConfigFileCollector {
         try {
             return files[filename];
         } catch {
-            List<string> keys = [.. files.Select(v => v.Key)];
+            List<string> keys = [.. this];
             throw new FileNotFoundException($"Filename does not exist. Available keys: \n\t{string.Join("\n\t", keys)}");
         }
+    }
+
+    /// <summary>
+    /// Enumerator for internal keys.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator<string> GetEnumerator() {
+        foreach (var k in files) {
+            yield return k.Key;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        return GetEnumerator();
     }
 }

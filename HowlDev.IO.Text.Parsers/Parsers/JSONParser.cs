@@ -21,13 +21,13 @@ public class JSONParser(string file) : ITokenParser {
         ReadOnlySpan<char> fileValue = file.Replace('\r', ' ').Replace('\n', ' ');
         List<(TextToken, string)> returnVals = [];
 
-        ParseFileContents(fileValue, returnVals);
+        ParseFileContents(fileValue, ref returnVals);
         return returnVals;
     }
 
 
 
-    private static void ParseFileContents(ReadOnlySpan<char> file, List<(TextToken, string)> list) {
+    private static void ParseFileContents(ReadOnlySpan<char> file, ref List<(TextToken, string)> list) {
         int index = 0;
         Stack<bool> contextStack = new(); // true = in object, false = in array
 
@@ -40,7 +40,7 @@ public class JSONParser(string file) : ITokenParser {
                         string segment = file[index..i].ToString().Trim();
                         if (!string.IsNullOrEmpty(segment)) {
                             bool inObject = contextStack.Count > 0 && contextStack.Peek();
-                            ProcessSegment(segment, inObject, list);
+                            ProcessSegment(segment, inObject, ref list);
                         }
                     }
 
@@ -54,7 +54,7 @@ public class JSONParser(string file) : ITokenParser {
                         string segment = file[index..i].ToString().Trim();
                         if (!string.IsNullOrEmpty(segment)) {
                             bool inObject = contextStack.Count > 0 && contextStack.Peek();
-                            ProcessSegment(segment, inObject, list);
+                            ProcessSegment(segment, inObject, ref list);
                         }
                     }
 
@@ -68,7 +68,7 @@ public class JSONParser(string file) : ITokenParser {
                         string segment = file[index..i].ToString().Trim();
                         if (!string.IsNullOrEmpty(segment)) {
                             bool inObject = contextStack.Count > 0 && contextStack.Peek();
-                            ProcessSegment(segment, inObject, list);
+                            ProcessSegment(segment, inObject, ref list);
                         }
                     }
 
@@ -82,7 +82,7 @@ public class JSONParser(string file) : ITokenParser {
                         string segment = file[index..i].ToString().Trim();
                         if (!string.IsNullOrEmpty(segment)) {
                             bool inObject = contextStack.Count > 0 && contextStack.Peek();
-                            ProcessSegment(segment, inObject, list);
+                            ProcessSegment(segment, inObject, ref list);
                         }
                     }
 
@@ -96,7 +96,7 @@ public class JSONParser(string file) : ITokenParser {
                         string segment = file[index..i].ToString().Trim();
                         if (!string.IsNullOrEmpty(segment)) {
                             bool inObject = contextStack.Count > 0 && contextStack.Peek();
-                            ProcessSegment(segment, inObject, list);
+                            ProcessSegment(segment, inObject, ref list);
                         }
                     }
 
@@ -110,15 +110,15 @@ public class JSONParser(string file) : ITokenParser {
 
     }
 
-    private static void ProcessSegment(string segment, bool inObject, List<(TextToken, string)> values) {
+    private static void ProcessSegment(ReadOnlySpan<char> segment, bool inObject, ref List<(TextToken, string)> values) {
         // Only look for key-value pairs if we're inside an object
         if (inObject) {
             // Check if this segment contains a colon (key-value pair)
             int colonIndex = segment.IndexOf(':');
             if (colonIndex != -1) {
                 // This is a key-value pair
-                string key = segment[..colonIndex].Trim().Trim('"');
-                string value = segment[(colonIndex + 1)..].Trim();
+                string key = segment[..colonIndex].Trim().Trim('"').ToString();
+                string value = segment[(colonIndex + 1)..].Trim().ToString();
 
                 values.Add((TextToken.KeyValue, key));
 
@@ -135,7 +135,7 @@ public class JSONParser(string file) : ITokenParser {
         }
 
         // This is a primitive value (either in an array or a value without a key in an object)
-        string primitiveValue = segment.Trim('"');
+        string primitiveValue = segment.Trim('"').ToString();
         values.Add((TextToken.Primitive, primitiveValue));
     }
 
